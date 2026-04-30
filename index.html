@@ -1,0 +1,1062 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Food Inventory App</title>
+    <script src="/_sdk/element_sdk.js"></script>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700;900&amp;family=Manrope:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Manrope", sans-serif;
+      }
+      .font-display {
+        font-family: "Fraunces", serif;
+      }
+      .leaf-bg {
+        background-image:
+          radial-gradient(
+            circle at 15% 20%,
+            rgba(34, 139, 87, 0.08) 0%,
+            transparent 40%
+          ),
+          radial-gradient(
+            circle at 85% 70%,
+            rgba(34, 139, 87, 0.06) 0%,
+            transparent 45%
+          );
+      }
+      .grid-pattern {
+        background-image:
+          linear-gradient(rgba(34, 139, 87, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(34, 139, 87, 0.04) 1px, transparent 1px);
+        background-size: 40px 40px;
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-12px);
+        }
+      }
+      .float-anim {
+        animation: float 4s ease-in-out infinite;
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-up {
+        animation: fadeUp 0.8s ease-out both;
+      }
+      .scroll-smooth {
+        scroll-behavior: smooth;
+      }
+      .badge-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #22c55e;
+        display: inline-block;
+        box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);
+        }
+        50% {
+          box-shadow: 0 0 0 8px rgba(34, 197, 94, 0.05);
+        }
+      }
+      html,
+      body {
+        scroll-behavior: smooth;
+      }
+    </style>
+    <style>
+      body {
+        box-sizing: border-box;
+      }
+    </style>
+    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  </head>
+  <body class="h-full w-full bg-white text-stone-900">
+    <main id="app-wrapper" class="h-full w-full overflow-auto scroll-smooth">
+      <!-- NAV -->
+      <header
+        class="sticky top-0 z-50 backdrop-blur-md bg-white/80 border-b border-stone-100"
+      >
+        <nav
+          class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between"
+        >
+          <div class="flex items-center gap-2">
+            <span class="font-display font-bold text-xl" style="color: #0f3d27"
+              >Food Inventory App</span
+            >
+          </div>
+          <div
+            class="hidden md:flex items-center gap-8 text-sm font-medium text-stone-600"
+          >
+            <a href="#features" class="hover:text-[#1f7a4d]">Features</a>
+            <a href="#how" class="hover:text-[#1f7a4d]">How it works</a>
+            <a href="#reviews" class="hover:text-[#1f7a4d]">Reviews</a>
+          </div>
+          <div class="flex items-center gap-3">
+            <button
+              onclick="
+                document
+                  .getElementById('final-cta')
+                  .scrollIntoView({ behavior: 'smooth' })
+              "
+              class="hidden md:block px-4 py-2 rounded-full text-sm font-semibold text-white transition hover:opacity-90"
+              style="background: #1f7a4d"
+            >
+              Get Started
+            </button>
+            <button
+              id="mobile-menu-btn"
+              class="md:hidden p-1 text-stone-600 hover:text-stone-900 focus:outline-none relative z-[60]"
+              onclick="
+                const menu = document.getElementById('mobile-menu');
+                menu.classList.toggle('opacity-0');
+                menu.classList.toggle('pointer-events-none');
+                menu.classList.toggle('scale-95');
+                document.getElementById('icon-menu').classList.toggle('hidden');
+                document.getElementById('icon-close').classList.toggle('hidden');
+                if (!menu.classList.contains('opacity-0')) {
+                  document.body.style.overflow = 'hidden';
+                } else {
+                  document.body.style.overflow = '';
+                }
+              "
+            >
+              <i id="icon-menu" data-lucide="menu" style="width: 24px; height: 24px"></i>
+              <i id="icon-close" data-lucide="x" style="width: 24px; height: 24px" class="hidden"></i>
+            </button>
+          </div>
+        </nav>
+
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="fixed top-0 left-0 w-full h-screen z-50 bg-white/95 backdrop-blur-lg flex flex-col items-center justify-center gap-8 md:hidden transition-all duration-300 ease-out opacity-0 pointer-events-none scale-95">
+          <a href="#features" class="text-stone-900 hover:text-[#1f7a4d] font-display font-bold text-3xl transition-colors" onclick="document.getElementById('mobile-menu-btn').click()">Features</a>
+          <a href="#how" class="text-stone-900 hover:text-[#1f7a4d] font-display font-bold text-3xl transition-colors" onclick="document.getElementById('mobile-menu-btn').click()">How it works</a>
+          <a href="#reviews" class="text-stone-900 hover:text-[#1f7a4d] font-display font-bold text-3xl transition-colors" onclick="document.getElementById('mobile-menu-btn').click()">Reviews</a>
+          <button
+            onclick="
+              document.getElementById('mobile-menu-btn').click();
+              setTimeout(() => {
+                document.getElementById('final-cta').scrollIntoView({ behavior: 'smooth' });
+              }, 300);
+            "
+            class="px-8 py-4 mt-4 rounded-full text-lg font-bold text-white transition hover:opacity-90 shadow-xl"
+            style="background: #1f7a4d"
+          >
+            Get Started
+          </button>
+        </div>
+      </header>
+      <!-- SECTION 1: HERO -->
+      <section class="relative leaf-bg grid-pattern">
+        <div
+          class="max-w-6xl mx-auto px-6 py-20 md:py-28 grid md:grid-cols-2 gap-12 items-center"
+        >
+          <div class="fade-up">
+            <div
+              class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-100 text-xs font-semibold text-[#1f7a4d] mb-6"
+            >
+              <span class="badge-dot"></span> Eco-friendly &amp; money-saving
+            </div>
+            <h1
+              id="hero-headline"
+              class="font-display font-black text-4xl md:text-6xl leading-[1.05] tracking-tight mb-6"
+              style="color: #0f3d27"
+            >
+              Stop Wasting Food. Start Managing Smarter.
+            </h1>
+            <p
+              id="hero-subtext"
+              class="text-lg text-stone-600 leading-relaxed mb-8 max-w-lg"
+            >
+              Keep track of your groceries, reduce food waste, and save money
+              with an easy-to-use food inventory app designed for busy students
+              and professionals.
+            </p>
+            <div class="flex flex-wrap gap-3">
+              <button
+                onclick="
+                  document
+                    .getElementById('final-cta')
+                    .scrollIntoView({ behavior: 'smooth' })
+                "
+                id="hero-cta-btn"
+                class="px-6 py-3.5 rounded-full text-white font-semibold shadow-lg shadow-emerald-200 hover:shadow-xl hover:-translate-y-0.5 transition-all inline-flex items-center gap-2"
+                style="background: #1f7a4d"
+              >
+                <span id="hero-cta-text">Start Tracking Your Food Today</span>
+                <i
+                  data-lucide="arrow-right"
+                  style="width: 18px; height: 18px"
+                ></i>
+              </button>
+              <button
+                onclick="
+                  document
+                    .getElementById('how')
+                    .scrollIntoView({ behavior: 'smooth' })
+                "
+                class="px-6 py-3.5 rounded-full font-semibold border-2 border-stone-200 hover:border-[#1f7a4d] transition"
+                style="color: #0f3d27"
+              >
+                See how it works
+              </button>
+            </div>
+            <div class="mt-10 flex items-center gap-6 text-sm text-stone-500">
+              <div class="flex items-center gap-2">
+                <i
+                  data-lucide="check-circle-2"
+                  style="width: 16px; height: 16px; color: #1f7a4d"
+                ></i>
+                Free to start
+              </div>
+              <div class="flex items-center gap-2">
+                <i
+                  data-lucide="check-circle-2"
+                  style="width: 16px; height: 16px; color: #1f7a4d"
+                ></i>
+                No card required
+              </div>
+            </div>
+          </div>
+          <!-- Phone mockup -->
+          <div
+            class="relative flex justify-center fade-up"
+            style="animation-delay: 0.2s"
+          >
+            <div
+              class="absolute inset-0 rounded-full blur-3xl opacity-30"
+              style="
+                background: radial-gradient(circle, #22c55e, transparent 60%);
+              "
+            ></div>
+            <div class="relative float-anim">
+              <div
+                class="w-64 md:w-72 bg-stone-900 rounded-[2.5rem] p-2.5 shadow-2xl"
+              >
+                <div class="bg-white rounded-[2rem] overflow-hidden">
+                  <div
+                    class="px-5 pt-5 pb-3 flex items-center justify-between text-xs font-semibold text-stone-400"
+                  >
+                    <span>9:41</span>
+                    <div class="flex gap-1">
+                      <i
+                        data-lucide="signal"
+                        style="width: 12px; height: 12px"
+                      ></i
+                      ><i
+                        data-lucide="battery"
+                        style="width: 14px; height: 14px"
+                      ></i>
+                    </div>
+                  </div>
+                  <div class="px-5 pb-5">
+                    <p class="text-xs text-stone-400 font-medium">
+                      Good morning
+                    </p>
+                    <h3
+                      class="font-display font-bold text-xl"
+                      style="color: #0f3d27"
+                    >
+                      Your Kitchen
+                    </h3>
+                    <div
+                      class="mt-4 p-3 rounded-2xl"
+                      style="background: #f0faf4"
+                    >
+                      <div class="flex items-center justify-between mb-2">
+                        <span
+                          class="text-xs font-bold uppercase tracking-wider"
+                          style="color: #1f7a4d"
+                          >Expiring soon</span
+                        >
+                        <i
+                          data-lucide="bell"
+                          style="width: 14px; height: 14px; color: #1f7a4d"
+                        ></i>
+                      </div>
+                      <div class="space-y-2">
+                        <div
+                          class="flex items-center justify-between bg-white rounded-xl p-2.5"
+                        >
+                          <div class="flex items-center gap-2">
+                            <div
+                              class="w-8 h-8 rounded-lg flex items-center justify-center"
+                              style="background: #fef3c7"
+                            >
+                              🥛
+                            </div>
+                            <div>
+                              <p class="text-sm font-semibold">Milk</p>
+                              <p class="text-[10px] text-stone-400">
+                                2 days left
+                              </p>
+                            </div>
+                          </div>
+                          <span
+                            class="text-[10px] font-bold px-2 py-1 rounded-full"
+                            style="background: #fef3c7; color: #a16207"
+                            >Soon</span
+                          >
+                        </div>
+                        <div
+                          class="flex items-center justify-between bg-white rounded-xl p-2.5"
+                        >
+                          <div class="flex items-center gap-2">
+                            <div
+                              class="w-8 h-8 rounded-lg flex items-center justify-center"
+                              style="background: #dcfce7"
+                            >
+                              🥬
+                            </div>
+                            <div>
+                              <p class="text-sm font-semibold">Spinach</p>
+                              <p class="text-[10px] text-stone-400">
+                                4 days left
+                              </p>
+                            </div>
+                          </div>
+                          <span
+                            class="text-[10px] font-bold px-2 py-1 rounded-full"
+                            style="background: #dcfce7; color: #15803d"
+                            >Fresh</span
+                          >
+                        </div>
+                        <div
+                          class="flex items-center justify-between bg-white rounded-xl p-2.5"
+                        >
+                          <div class="flex items-center gap-2">
+                            <div
+                              class="w-8 h-8 rounded-lg flex items-center justify-center"
+                              style="background: #fee2e2"
+                            >
+                              🍓
+                            </div>
+                            <div>
+                              <p class="text-sm font-semibold">Strawberries</p>
+                              <p class="text-[10px] text-stone-400">Today</p>
+                            </div>
+                          </div>
+                          <span
+                            class="text-[10px] font-bold px-2 py-1 rounded-full"
+                            style="background: #fee2e2; color: #b91c1c"
+                            >Urgent</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      class="mt-3 w-full py-2.5 rounded-xl text-white text-sm font-semibold flex items-center justify-center gap-1.5"
+                      style="background: #1f7a4d"
+                    >
+                      <i
+                        data-lucide="plus"
+                        style="width: 14px; height: 14px"
+                      ></i>
+                      Add Item
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <!-- Floating badge -->
+              <div
+                class="absolute -left-10 top-16 bg-white rounded-2xl shadow-xl px-3 py-2 flex items-center gap-2 border border-stone-100"
+              >
+                <div
+                  class="w-8 h-8 rounded-full flex items-center justify-center"
+                  style="background: #dcfce7"
+                >
+                  <i
+                    data-lucide="trending-down"
+                    style="width: 14px; height: 14px; color: #15803d"
+                  ></i>
+                </div>
+                <div>
+                  <p class="text-[10px] text-stone-400 font-medium">
+                    Waste reduced
+                  </p>
+                  <p class="text-sm font-bold" style="color: #0f3d27">-68%</p>
+                </div>
+              </div>
+              <div
+                class="absolute -right-6 bottom-20 bg-white rounded-2xl shadow-xl px-3 py-2 flex items-center gap-2 border border-stone-100"
+              >
+                <div
+                  class="w-8 h-8 rounded-full flex items-center justify-center"
+                  style="background: #fef3c7"
+                >
+                  <i
+                    data-lucide="piggy-bank"
+                    style="width: 14px; height: 14px; color: #a16207"
+                  ></i>
+                </div>
+                <div>
+                  <p class="text-[10px] text-stone-400 font-medium">Saved</p>
+                  <p class="text-sm font-bold" style="color: #0f3d27">
+                    $127/mo
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- SECTION 2: FEATURES -->
+      <section id="features" class="py-20 md:py-28 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+          <div class="text-center mb-16">
+            <p
+              class="text-sm font-bold uppercase tracking-widest mb-3"
+              style="color: #1f7a4d"
+            >
+              What we offer
+            </p>
+            <h2
+              id="features-title"
+              class="font-display font-black text-3xl md:text-5xl tracking-tight mb-4"
+              style="color: #0f3d27"
+            >
+              Your Smart Kitchen Assistant
+            </h2>
+            <p
+              id="features-description"
+              class="text-lg text-stone-600 max-w-2xl mx-auto leading-relaxed"
+            >
+              Our Food Inventory Tracking App helps you manage your kitchen
+              effortlessly by tracking your groceries, monitoring expiry dates,
+              and sending timely reminders—so you never waste food or money
+              again.
+            </p>
+          </div>
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div
+              class="feature-card group p-7 rounded-3xl border border-stone-100 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-50 transition-all"
+              style="background: #f9fdfb"
+            >
+              <div
+                class="w-12 h-12 rounded-2xl flex items-center justify-center mb-5"
+                style="background: #1f7a4d"
+              >
+                <i
+                  data-lucide="clipboard-list"
+                  style="width: 22px; height: 22px; color: white"
+                ></i>
+              </div>
+              <h3
+                class="font-display font-bold text-xl mb-2"
+                style="color: #0f3d27"
+              >
+                Smart Inventory Tracking
+              </h3>
+              <p class="text-stone-600 text-sm leading-relaxed">
+                Keep every item in your kitchen organized in one simple
+                dashboard.
+              </p>
+            </div>
+            <div
+              class="feature-card group p-7 rounded-3xl border border-stone-100 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-50 transition-all"
+              style="background: #f9fdfb"
+            >
+              <div
+                class="w-12 h-12 rounded-2xl flex items-center justify-center mb-5"
+                style="background: #1f7a4d"
+              >
+                <i
+                  data-lucide="bell-ring"
+                  style="width: 22px; height: 22px; color: white"
+                ></i>
+              </div>
+              <h3
+                class="font-display font-bold text-xl mb-2"
+                style="color: #0f3d27"
+              >
+                Expiry Date Alerts
+              </h3>
+              <p class="text-stone-600 text-sm leading-relaxed">
+                Get notified before food goes bad, so nothing ends up in the
+                trash.
+              </p>
+            </div>
+            <div
+              class="feature-card group p-7 rounded-3xl border border-stone-100 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-50 transition-all"
+              style="background: #f9fdfb"
+            >
+              <div
+                class="w-12 h-12 rounded-2xl flex items-center justify-center mb-5"
+                style="background: #1f7a4d"
+              >
+                <i
+                  data-lucide="scan-line"
+                  style="width: 22px; height: 22px; color: white"
+                ></i>
+              </div>
+              <h3
+                class="font-display font-bold text-xl mb-2"
+                style="color: #0f3d27"
+              >
+                Quick Scan &amp; Add
+              </h3>
+              <p class="text-stone-600 text-sm leading-relaxed">
+                Scan barcodes to add items in seconds—no more tedious typing.
+              </p>
+            </div>
+            <div
+              class="feature-card group p-7 rounded-3xl border border-stone-100 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-50 transition-all"
+              style="background: #f9fdfb"
+            >
+              <div
+                class="w-12 h-12 rounded-2xl flex items-center justify-center mb-5"
+                style="background: #1f7a4d"
+              >
+                <i
+                  data-lucide="piggy-bank"
+                  style="width: 22px; height: 22px; color: white"
+                ></i>
+              </div>
+              <h3
+                class="font-display font-bold text-xl mb-2"
+                style="color: #0f3d27"
+              >
+                Save Money
+              </h3>
+              <p class="text-stone-600 text-sm leading-relaxed">
+                Cut grocery bills by using what you already have before buying
+                more.
+              </p>
+            </div>
+            <div
+              class="feature-card group p-7 rounded-3xl border border-stone-100 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-50 transition-all"
+              style="background: #f9fdfb"
+            >
+              <div
+                class="w-12 h-12 rounded-2xl flex items-center justify-center mb-5"
+                style="background: #1f7a4d"
+              >
+                <i
+                  data-lucide="sparkles"
+                  style="width: 22px; height: 22px; color: white"
+                ></i>
+              </div>
+              <h3
+                class="font-display font-bold text-xl mb-2"
+                style="color: #0f3d27"
+              >
+                Simple &amp; User-Friendly
+              </h3>
+              <p class="text-stone-600 text-sm leading-relaxed">
+                A clean interface that anyone can master in under a minute.
+              </p>
+            </div>
+            <div
+              class="feature-card group p-7 rounded-3xl border border-stone-100 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-50 transition-all"
+              style="background: #f9fdfb"
+            >
+              <div
+                class="w-12 h-12 rounded-2xl flex items-center justify-center mb-5"
+                style="background: #1f7a4d"
+              >
+                <i
+                  data-lucide="leaf"
+                  style="width: 22px; height: 22px; color: white"
+                ></i>
+              </div>
+              <h3
+                class="font-display font-bold text-xl mb-2"
+                style="color: #0f3d27"
+              >
+                Eco-Friendly Living
+              </h3>
+              <p class="text-stone-600 text-sm leading-relaxed">
+                Reduce your footprint by cutting food waste—good for you and the
+                planet.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- SECTION 3: HOW IT WORKS -->
+      <section
+        id="how"
+        class="py-20 md:py-28 relative overflow-hidden"
+        style="background: #0f3d27"
+      >
+        <div
+          class="absolute inset-0 opacity-10"
+          style="
+            background-image:
+              radial-gradient(circle at 20% 30%, #4ade80 0%, transparent 50%),
+              radial-gradient(circle at 80% 70%, #22c55e 0%, transparent 50%);
+          "
+        ></div>
+        <div class="relative max-w-6xl mx-auto px-6">
+          <div class="text-center mb-16">
+            <p
+              class="text-sm font-bold uppercase tracking-widest mb-3"
+              style="color: #86efac"
+            >
+              Simple process
+            </p>
+            <h2
+              id="how-title"
+              class="font-display font-black text-3xl md:text-5xl tracking-tight text-white mb-4"
+            >
+              How It Works
+            </h2>
+            <p class="text-emerald-100/80 text-lg max-w-xl mx-auto">
+              Four easy steps to a smarter, waste-free kitchen.
+            </p>
+          </div>
+          <div class="grid md:grid-cols-4 gap-6 md:gap-4 relative">
+            <!-- connecting line -->
+            <div
+              class="hidden md:block absolute top-8 left-[12%] right-[12%] h-px border-t-2 border-dashed border-emerald-400/30"
+            ></div>
+            <div class="relative text-center">
+              <div
+                class="relative z-10 w-16 h-16 mx-auto rounded-2xl bg-white flex items-center justify-center mb-5 shadow-lg"
+              >
+                <i
+                  data-lucide="shopping-basket"
+                  style="width: 26px; height: 26px; color: #1f7a4d"
+                ></i>
+              </div>
+              <div
+                class="inline-block text-xs font-bold px-2.5 py-1 rounded-full mb-2"
+                style="background: rgba(134, 239, 172, 0.15); color: #86efac"
+              >
+                STEP 01
+              </div>
+              <h4 class="font-display font-bold text-xl text-white mb-2">
+                Add your groceries
+              </h4>
+              <p class="text-emerald-100/70 text-sm leading-relaxed">
+                Scan or type items in seconds.
+              </p>
+            </div>
+            <div class="relative text-center">
+              <div
+                class="relative z-10 w-16 h-16 mx-auto rounded-2xl bg-white flex items-center justify-center mb-5 shadow-lg"
+              >
+                <i
+                  data-lucide="calendar-clock"
+                  style="width: 26px; height: 26px; color: #1f7a4d"
+                ></i>
+              </div>
+              <div
+                class="inline-block text-xs font-bold px-2.5 py-1 rounded-full mb-2"
+                style="background: rgba(134, 239, 172, 0.15); color: #86efac"
+              >
+                STEP 02
+              </div>
+              <h4 class="font-display font-bold text-xl text-white mb-2">
+                Track expiry dates
+              </h4>
+              <p class="text-emerald-100/70 text-sm leading-relaxed">
+                Always know what's fresh.
+              </p>
+            </div>
+            <div class="relative text-center">
+              <div
+                class="relative z-10 w-16 h-16 mx-auto rounded-2xl bg-white flex items-center justify-center mb-5 shadow-lg"
+              >
+                <i
+                  data-lucide="bell-ring"
+                  style="width: 26px; height: 26px; color: #1f7a4d"
+                ></i>
+              </div>
+              <div
+                class="inline-block text-xs font-bold px-2.5 py-1 rounded-full mb-2"
+                style="background: rgba(134, 239, 172, 0.15); color: #86efac"
+              >
+                STEP 03
+              </div>
+              <h4 class="font-display font-bold text-xl text-white mb-2">
+                Get reminders
+              </h4>
+              <p class="text-emerald-100/70 text-sm leading-relaxed">
+                Timely alerts before spoilage.
+              </p>
+            </div>
+            <div class="relative text-center">
+              <div
+                class="relative z-10 w-16 h-16 mx-auto rounded-2xl bg-white flex items-center justify-center mb-5 shadow-lg"
+              >
+                <i
+                  data-lucide="heart-handshake"
+                  style="width: 26px; height: 26px; color: #1f7a4d"
+                ></i>
+              </div>
+              <div
+                class="inline-block text-xs font-bold px-2.5 py-1 rounded-full mb-2"
+                style="background: rgba(134, 239, 172, 0.15); color: #86efac"
+              >
+                STEP 04
+              </div>
+              <h4 class="font-display font-bold text-xl text-white mb-2">
+                Use &amp; save money
+              </h4>
+              <p class="text-emerald-100/70 text-sm leading-relaxed">
+                Eat on time, save every week.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- SECTION 4: TESTIMONIALS + FINAL CTA -->
+      <section id="reviews" class="py-20 md:py-28 bg-white leaf-bg">
+        <div class="max-w-6xl mx-auto px-6">
+          <div class="text-center mb-14">
+            <p
+              class="text-sm font-bold uppercase tracking-widest mb-3"
+              style="color: #1f7a4d"
+            >
+              Loved by users
+            </p>
+            <h2
+              id="testimonials-title"
+              class="font-display font-black text-3xl md:text-5xl tracking-tight mb-4"
+              style="color: #0f3d27"
+            >
+              What Users Say
+            </h2>
+          </div>
+          <div class="grid md:grid-cols-3 gap-6 mb-20">
+            <div
+              class="p-7 rounded-3xl bg-white border border-stone-100 shadow-sm hover:shadow-lg transition"
+            >
+              <div class="flex gap-1 mb-4" style="color: #f59e0b">
+                <i
+                  data-lucide="star"
+                  style="width: 16px; height: 16px; fill: currentColor"
+                ></i>
+                <i
+                  data-lucide="star"
+                  style="width: 16px; height: 16px; fill: currentColor"
+                ></i>
+                <i
+                  data-lucide="star"
+                  style="width: 16px; height: 16px; fill: currentColor"
+                ></i>
+                <i
+                  data-lucide="star"
+                  style="width: 16px; height: 16px; fill: currentColor"
+                ></i>
+                <i
+                  data-lucide="star"
+                  style="width: 16px; height: 16px; fill: currentColor"
+                ></i>
+              </div>
+              <p class="text-stone-700 leading-relaxed mb-5">
+                "This app helped me save money and reduce food waste every
+                week!"
+              </p>
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white"
+                  style="background: #1f7a4d"
+                >
+                  SA
+                </div>
+                <div>
+                  <p class="font-semibold text-sm" style="color: #0f3d27">
+                    Sarah A.
+                  </p>
+                  <p class="text-xs text-stone-400">Student</p>
+                </div>
+              </div>
+            </div>
+            <div
+              class="p-7 rounded-3xl bg-white border border-stone-100 shadow-sm hover:shadow-lg transition"
+            >
+              <div class="flex gap-1 mb-4" style="color: #f59e0b">
+                <i
+                  data-lucide="star"
+                  style="width: 16px; height: 16px; fill: currentColor"
+                ></i>
+                <i
+                  data-lucide="star"
+                  style="width: 16px; height: 16px; fill: currentColor"
+                ></i>
+                <i
+                  data-lucide="star"
+                  style="width: 16px; height: 16px; fill: currentColor"
+                ></i>
+                <i
+                  data-lucide="star"
+                  style="width: 16px; height: 16px; fill: currentColor"
+                ></i>
+                <i
+                  data-lucide="star"
+                  style="width: 16px; height: 16px; fill: currentColor"
+                ></i>
+              </div>
+              <p class="text-stone-700 leading-relaxed mb-5">
+                "Expiry reminders are a game changer. I no longer throw away
+                groceries."
+              </p>
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white"
+                  style="background: #1f7a4d"
+                >
+                  MK
+                </div>
+                <div>
+                  <p class="font-semibold text-sm" style="color: #0f3d27">
+                    Marcus K.
+                  </p>
+                  <p class="text-xs text-stone-400">Professional</p>
+                </div>
+              </div>
+            </div>
+            <div
+              class="p-7 rounded-3xl bg-white border border-stone-100 shadow-sm hover:shadow-lg transition"
+            >
+              <div class="flex gap-1 mb-4" style="color: #f59e0b">
+                <i
+                  data-lucide="star"
+                  style="width: 16px; height: 16px; fill: currentColor"
+                ></i>
+                <i
+                  data-lucide="star"
+                  style="width: 16px; height: 16px; fill: currentColor"
+                ></i>
+                <i
+                  data-lucide="star"
+                  style="width: 16px; height: 16px; fill: currentColor"
+                ></i>
+                <i
+                  data-lucide="star"
+                  style="width: 16px; height: 16px; fill: currentColor"
+                ></i>
+                <i
+                  data-lucide="star"
+                  style="width: 16px; height: 16px; fill: currentColor"
+                ></i>
+              </div>
+              <p class="text-stone-700 leading-relaxed mb-5">
+                "Perfect for shared homes. Everyone knows what's available now!"
+              </p>
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white"
+                  style="background: #1f7a4d"
+                >
+                  PR
+                </div>
+                <div>
+                  <p class="font-semibold text-sm" style="color: #0f3d27">
+                    Priya R.
+                  </p>
+                  <p class="text-xs text-stone-400">Roommate</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Final CTA -->
+          <div
+            id="final-cta"
+            class="relative rounded-[2.5rem] overflow-hidden p-10 md:p-16 text-center"
+            style="
+              background: linear-gradient(135deg, #1f7a4d 0%, #0f3d27 100%);
+            "
+          >
+            <div
+              class="absolute inset-0 opacity-20"
+              style="
+                background-image:
+                  radial-gradient(
+                    circle at 20% 20%,
+                    #86efac 0%,
+                    transparent 40%
+                  ),
+                  radial-gradient(
+                    circle at 80% 80%,
+                    #22c55e 0%,
+                    transparent 40%
+                  );
+              "
+            ></div>
+            <div class="relative">
+              <div
+                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6"
+                style="background: rgba(255, 255, 255, 0.15)"
+              >
+                <i
+                  data-lucide="sparkles"
+                  style="width: 14px; height: 14px; color: #86efac"
+                ></i>
+                <span
+                  class="text-xs font-bold text-white uppercase tracking-wider"
+                  >Join 10,000+ smart kitchens</span
+                >
+              </div>
+              <h2
+                id="final-headline"
+                class="font-display font-black text-3xl md:text-5xl text-white tracking-tight mb-4 max-w-2xl mx-auto"
+              >
+                Take Control of Your Kitchen Today
+              </h2>
+              <p class="text-emerald-100/80 mb-8 max-w-lg mx-auto">
+                Start saving food, money, and time in just a few taps.
+              </p>
+              <button
+                onclick="
+                  this.querySelector('span').textContent = 'Welcome aboard! 🎉';
+                  this.style.background = '#86efac';
+                  this.style.color = '#0f3d27';
+                "
+                id="final-cta-btn"
+                class="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold shadow-2xl hover:-translate-y-0.5 transition-all text-lg"
+                style="background: white; color: #0f3d27"
+              >
+                <span id="final-cta-text"
+                  >Sign Up Now to Save Food &amp; Money</span
+                >
+                <i
+                  data-lucide="arrow-right"
+                  style="width: 20px; height: 20px"
+                ></i>
+              </button>
+            </div>
+          </div>
+          <!-- Footer -->
+          <footer
+            class="mt-16 pt-8 border-t border-stone-100 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-stone-500"
+          >
+            <div class="flex items-center gap-2">
+              <span class="font-display font-bold" style="color: #0f3d27"
+                >Food Inventory App</span
+              >
+              <span class="text-stone-400">© 2026</span>
+            </div>
+            <div class="flex gap-6">
+              <a href="#" class="hover:text-[#1f7a4d]">Privacy</a>
+              <a href="#" class="hover:text-[#1f7a4d]">Terms</a>
+              <a href="#" class="hover:text-[#1f7a4d]">Contact</a>
+            </div>
+          </footer>
+        </div>
+      </section>
+    </main>
+    <script>
+      const defaultConfig = {
+        hero_headline: "Stop Wasting Food. Start Managing Smarter.",
+        hero_subtext:
+          "Keep track of your groceries, reduce food waste, and save money with an easy-to-use food inventory app designed for busy students and professionals.",
+        hero_cta: "Start Tracking Your Food Today",
+        features_title: "Your Smart Kitchen Assistant",
+        features_description:
+          "Our Food Inventory Tracking App helps you manage your kitchen effortlessly by tracking your groceries, monitoring expiry dates, and sending timely reminders—so you never waste food or money again.",
+        how_title: "How It Works",
+        testimonials_title: "What Users Say",
+        final_headline: "Take Control of Your Kitchen Today",
+        final_cta: "Sign Up Now to Save Food & Money",
+      };
+
+      function onConfigChange(config) {
+        const c = { ...defaultConfig, ...config };
+        document.getElementById("hero-headline").textContent = c.hero_headline;
+        document.getElementById("hero-subtext").textContent = c.hero_subtext;
+        document.getElementById("hero-cta-text").textContent = c.hero_cta;
+        document.getElementById("features-title").textContent =
+          c.features_title;
+        document.getElementById("features-description").textContent =
+          c.features_description;
+        document.getElementById("how-title").textContent = c.how_title;
+        document.getElementById("testimonials-title").textContent =
+          c.testimonials_title;
+        document.getElementById("final-headline").textContent =
+          c.final_headline;
+        document.getElementById("final-cta-text").textContent = c.final_cta;
+      }
+
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (config) => onConfigChange(config),
+          mapToCapabilities: () => ({
+            recolorables: [],
+            borderables: [],
+            fontEditable: undefined,
+            fontSizeable: undefined,
+          }),
+          mapToEditPanelValues: (config) => {
+            const c = { ...defaultConfig, ...config };
+            return new Map([
+              ["hero_headline", c.hero_headline],
+              ["hero_subtext", c.hero_subtext],
+              ["hero_cta", c.hero_cta],
+              ["features_title", c.features_title],
+              ["features_description", c.features_description],
+              ["how_title", c.how_title],
+              ["testimonials_title", c.testimonials_title],
+              ["final_headline", c.final_headline],
+              ["final_cta", c.final_cta],
+            ]);
+          },
+        });
+      }
+
+      lucide.createIcons();
+    </script>
+    <script>
+      (function () {
+        function c() {
+          var b = a.contentDocument || a.contentWindow.document;
+          if (b) {
+            var d = b.createElement("script");
+            d.innerHTML =
+              "window.__CF$cv$params={r:'9f4913be86018eee',t:'MTc3NzU3ODY0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+            b.getElementsByTagName("head")[0].appendChild(d);
+          }
+        }
+        if (document.body) {
+          var a = document.createElement("iframe");
+          a.height = 1;
+          a.width = 1;
+          a.style.position = "absolute";
+          a.style.top = 0;
+          a.style.left = 0;
+          a.style.border = "none";
+          a.style.visibility = "hidden";
+          document.body.appendChild(a);
+          if ("loading" !== document.readyState) c();
+          else if (window.addEventListener)
+            document.addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document.onreadystatechange || function () {};
+            document.onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document.readyState &&
+                ((document.onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>
