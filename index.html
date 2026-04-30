@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="h-full">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -95,8 +95,8 @@
     </style>
     <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   </head>
-  <body class="h-full w-full bg-white text-stone-900">
-    <main id="app-wrapper" class="h-full w-full overflow-auto scroll-smooth">
+  <body class="w-full bg-white text-stone-900">
+    <main id="app-wrapper" class="w-full">
       <!-- NAV -->
       <header
         class="sticky top-0 z-50 backdrop-blur-md bg-white/80 border-b border-stone-100"
@@ -1003,7 +1003,7 @@
         });
       }
 
-      document.addEventListener('DOMContentLoaded', () => {
+      (function() {
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
         const mobileGetStartedBtn = document.getElementById('mobile-get-started-btn');
@@ -1042,7 +1042,7 @@
             }, 300);
           });
         }
-      });
+      })();
 
       lucide.createIcons();
     </script>
