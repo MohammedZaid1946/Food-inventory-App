@@ -117,17 +117,13 @@
             <a href="#reviews" class="hover:text-[#1f7a4d]">Reviews</a>
           </div>
           <div class="flex items-center gap-3">
-            <button
-              onclick="
-                document
-                  .getElementById('final-cta')
-                  .scrollIntoView({ behavior: 'smooth' })
-              "
+            <a
+              href="signup.html"
               class="hidden md:block px-4 py-2 rounded-full text-sm font-semibold text-white transition hover:opacity-90"
               style="background: #1f7a4d"
             >
               Get Started
-            </button>
+            </a>
             <button
               id="mobile-menu-btn"
               class="md:hidden p-1 text-stone-600 hover:text-stone-900 focus:outline-none relative z-[60]"
@@ -143,13 +139,13 @@
           <a href="#features" class="mobile-nav-link text-stone-900 hover:text-[#1f7a4d] font-display font-bold text-3xl transition-colors">Features</a>
           <a href="#how" class="mobile-nav-link text-stone-900 hover:text-[#1f7a4d] font-display font-bold text-3xl transition-colors">How it works</a>
           <a href="#reviews" class="mobile-nav-link text-stone-900 hover:text-[#1f7a4d] font-display font-bold text-3xl transition-colors">Reviews</a>
-          <button
-            id="mobile-get-started-btn"
+          <a
+            href="signup.html"
             class="px-8 py-4 mt-4 rounded-full text-lg font-bold text-white transition hover:opacity-90 shadow-xl"
             style="background: #1f7a4d"
           >
             Get Started
-          </button>
+          </a>
         </div>
       </header>
       <!-- SECTION 1: HERO -->
@@ -179,12 +175,8 @@
               and professionals.
             </p>
             <div class="flex flex-wrap gap-3">
-              <button
-                onclick="
-                  document
-                    .getElementById('final-cta')
-                    .scrollIntoView({ behavior: 'smooth' })
-                "
+              <a
+                href="signup.html"
                 id="hero-cta-btn"
                 class="px-6 py-3.5 rounded-full text-white font-semibold shadow-lg shadow-emerald-200 hover:shadow-xl hover:-translate-y-0.5 transition-all inline-flex items-center gap-2"
                 style="background: #1f7a4d"
@@ -194,7 +186,7 @@
                   data-lucide="arrow-right"
                   style="width: 18px; height: 18px"
                 ></i>
-              </button>
+              </a>
               <button
                 onclick="
                   document
@@ -905,12 +897,8 @@
               <p class="text-emerald-100/80 mb-8 max-w-lg mx-auto">
                 Start saving food, money, and time in just a few taps.
               </p>
-              <button
-                onclick="
-                  this.querySelector('span').textContent = 'Welcome aboard! 🎉';
-                  this.style.background = '#86efac';
-                  this.style.color = '#0f3d27';
-                "
+              <a
+                href="signup.html"
                 id="final-cta-btn"
                 class="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold shadow-2xl hover:-translate-y-0.5 transition-all text-lg"
                 style="background: white; color: #0f3d27"
@@ -922,7 +910,7 @@
                   data-lucide="arrow-right"
                   style="width: 20px; height: 20px"
                 ></i>
-              </button>
+              </a>
             </div>
           </div>
           <!-- Footer -->
@@ -1024,6 +1012,7 @@
           mobileMenuBtn.addEventListener('click', toggleMenu);
         }
 
+        // Mobile links handlers
         const menuLinks = document.querySelectorAll('.mobile-nav-link');
         menuLinks.forEach(link => {
           link.addEventListener('click', () => {
@@ -1032,16 +1021,6 @@
             toggleMenu();
           });
         });
-
-        if (mobileGetStartedBtn) {
-          mobileGetStartedBtn.addEventListener('click', () => {
-            toggleMenu();
-            setTimeout(() => {
-              const finalCta = document.getElementById('final-cta');
-              if (finalCta) finalCta.scrollIntoView({ behavior: 'smooth' });
-            }, 300);
-          });
-        }
       })();
 
       lucide.createIcons();
